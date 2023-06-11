@@ -116,7 +116,6 @@ def main():
         diccionario[contador] = player_info
         print(f"{climber1}: {diccionario[contador]}")
         time.sleep(0.1)
-    
 
 main()
 """
