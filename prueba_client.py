@@ -18,54 +18,54 @@ class Climber:
         if math.sqrt((x**2)+(y**2)) > 22900:
             return True
 
-    def cima_posible(self,contador,contador2):
+    def cima_posible(self,diccionario,contador,posible_cima,contador2):
         contador -= 1
         if contador == 0 or contador == 1:
-            return self.posible_cima
-        x = self.diccionario[contador]["x"]
-        y = self.diccionario[contador]["y"]
-        z = self.diccionario[contador]["z"]
-        before_z = self.diccionario[contador-1]["z"]
-        if math.sqrt((x**2)+(y**2)) > 22900:
-            self.posible_cima=True
-            return self.posible_cima
-        if contador2 < 20 and self.posible_cima == False:
-            return self.posible_cima
+            return posible_cima
+        x = diccionario[contador]["x"]
+        y = diccionario[contador]["y"]
+        z = diccionario[contador]["z"]
+        before_z = diccionario[contador-1]["z"]
+        if self.peligro(x,y):
+            posible_cima=True
+            return posible_cima
+        if contador2 < 20 and posible_cima == False:
+            return posible_cima
         if contador > 15:
-            loop_cords = (self.diccionario[contador-15]["x"],self.diccionario[contador-15]["y"],self.diccionario[contador-15]["z"])
-            actual_cords = (self.diccionario[contador]["x"],self.diccionario[contador]["y"],self.diccionario[contador]["z"])
+            loop_cords = (diccionario[contador-15]["x"],diccionario[contador-15]["y"],diccionario[contador-15]["z"])
+            actual_cords = (diccionario[contador]["x"],diccionario[contador]["y"],diccionario[contador]["z"])
             if (abs(loop_cords[0] - actual_cords[0]) < 200) and (abs(loop_cords[1] - actual_cords[1]) < 200) and (abs(loop_cords[2] - actual_cords[2]) < 2):
                 print("loop")
-                self.posible_cima = False
+                posible_cima = False
                 contador2 = 0
-                return self.posible_cima
-        if z > before_z and self.posible_cima == False:
+                return posible_cima
+        if z > before_z and posible_cima == False:
             print("cambio")
-            self.posible_cima = True
-        return self.posible_cima
+            posible_cima = True
+        return posible_cima
 
-    def find_direction(self,contador) -> float:
+    def find_direction(self,diccionario,direction,contador,posible_cima) -> float:
         """
         returns the next direction
         """
         contador -= 1
         if contador == 0 or contador == 1:
-            return self.direction
-        x = self.diccionario[contador]["x"]
-        y = self.diccionario[contador]["y"]
-        z = self.diccionario[contador]["z"]
-        before_x = self.diccionario[contador-1]["x"]
-        before_y = self.diccionario[contador-1]["y"]
-        before_z = self.diccionario[contador-1]["z"]
-        if math.sqrt((x**2)+(y**2)) > 22900:
-            if math.sqrt((before_x**2)+(before_y**2)) > 22900:
-                return self.direction
+            return direction
+        x = diccionario[contador]["x"]
+        y = diccionario[contador]["y"]
+        z = diccionario[contador]["z"]
+        before_x = diccionario[contador-1]["x"]
+        before_y = diccionario[contador-1]["y"]
+        before_z = diccionario[contador-1]["z"]
+        if self.peligro(x,y):
+            if self.peligro(before_x,before_y):
+                return direction
             print("PELIGRO!")
-            self.direction -= (7*math.pi/8)
-            return self.direction
-        if z < before_z and self.posible_cima == True:
-            self.direction -= (math.pi/4)
-        return self.direction
+            direction -= (7*math.pi/8)
+            return direction
+        if z < before_z and posible_cima == True:
+            direction -= (math.pi/4)
+        return direction
 
     def find_speed(self,contador):
         contador -= 1
@@ -75,7 +75,7 @@ class Climber:
         y = self.diccionario[contador]["y"]
         z = self.diccionario[contador]["z"]
         before_z = self.diccionario[contador-1]["z"]
-        if math.sqrt((x**2)+(y**2)) > 22900:
+        if self.peligro(x,y):
             self.speed = 30
         if z < before_z:
             self.speed = 20
@@ -87,10 +87,10 @@ class Climber:
         self.contador += 1
         if self.posible_cima == False:
             self.contador2 += 1
-        self.posible_cima = self.cima_posible(self.contador,self.contador2)
+        self.posible_cima = self.cima_posible(self.diccionario,self.contador,self.posible_cima,self.contador2)
         if self.posible_cima == True:
             self.contador2 = 0 
-        self.direction = self.find_direction(self.contador)
+        self.direction = self.find_direction(self.diccionario,self.direction,self.contador,self.posible_cima)
         self.speed = self.find_speed(self.contador)
         self.player_info = c.get_data()[team1][self.name]
         self.diccionario[self.contador] = self.player_info
