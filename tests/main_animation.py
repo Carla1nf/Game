@@ -39,8 +39,8 @@ def main_graf(data):
     z.append(data["z"])
 
     if contador%2 == 0:
-        ax.scatter(x_values,y_values,z_values)
-        ax.plot(x,y,z)
+        ax.scatter(x_values,y_values,z_values, color="black")
+        ax.plot(x,y,z, color="black")
         plt.pause(0.001)
 
 def test():

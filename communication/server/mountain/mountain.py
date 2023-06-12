@@ -5,6 +5,7 @@ class Mountain:
         self.surface = function
         self.inclination = df
         self.flag = flag
+        print(flag)
         self.visual_radius = visual_radius
 
     def get_height(self, x: float, y: float) -> float:
