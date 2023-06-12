@@ -15,6 +15,10 @@ c.add_team(team2,equipo)
 
 c.finish_registration()
 
+def peligro(x,y) -> bool:
+    if math.sqrt((x**2)+(y**2)) > 22900:
+        return True
+
 def find_direction(diccionario,direction,contador,posible_cima,contador2) -> float:
     """
     returns the next direction
@@ -25,10 +29,15 @@ def find_direction(diccionario,direction,contador,posible_cima,contador2) -> flo
     x = diccionario[contador]["x"]
     y = diccionario[contador]["y"]
     z = diccionario[contador]["z"]
+    before_x = diccionario[contador-1]["x"]
+    before_y = diccionario[contador-1]["y"]
     before_z = diccionario[contador-1]["z"]
-    if math.sqrt((x**2)+(y**2)) > 22850:
+    if peligro(x,y):
+        if peligro(before_x,before_y):
+            return direction
         print("PELIGRO!")
-        direction -= (math.pi/2)
+        direction -= (7*math.pi/8)
+        return direction
     if z < before_z and posible_cima == True:
         direction -= (math.pi/4)
     return direction
@@ -41,8 +50,8 @@ def find_speed(diccionario,speed,contador):
     y = diccionario[contador]["y"]
     z = diccionario[contador]["z"]
     before_z = diccionario[contador-1]["z"]
-    if math.sqrt((x**2)+(y**2)) > 22750:
-        speed = 20
+    if peligro(x,y):
+        speed = 30
     if z < before_z:
         speed = 20
     else:
@@ -53,13 +62,17 @@ def cima_posible(diccionario,contador,posible_cima,contador2):
     contador -= 1
     if contador == 0 or contador == 1:
         return posible_cima
+    x = diccionario[contador]["x"]
+    y = diccionario[contador]["y"]
     z = diccionario[contador]["z"]
     before_z = diccionario[contador-1]["z"]
-    if contador2 < 20 and posible_cima == False:
-        print("continue")
+    if peligro(x,y):
+        posible_cima=True
         return posible_cima
-    if contador > 25:
-        loop_cords = (diccionario[contador-25]["x"],diccionario[contador-25]["y"],diccionario[contador-25]["z"])
+    if contador2 < 20 and posible_cima == False:
+        return posible_cima
+    if contador > 15:
+        loop_cords = (diccionario[contador-15]["x"],diccionario[contador-15]["y"],diccionario[contador-15]["z"])
         actual_cords = (diccionario[contador]["x"],diccionario[contador]["y"],diccionario[contador]["z"])
         if (abs(loop_cords[0] - actual_cords[0]) < 200) and (abs(loop_cords[1] - actual_cords[1]) < 200) and (abs(loop_cords[2] - actual_cords[2]) < 2):
             print("loop")
@@ -73,7 +86,7 @@ def cima_posible(diccionario,contador,posible_cima,contador2):
 def main():
     global posible_cima
     posible_cima = True
-    direction = ((5*math.pi)/4)
+    direction = (5*(math.pi)/4)
     contador = 0
     diccionario = {}
     player_info = c.get_data()[team2][climber1]
