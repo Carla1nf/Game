@@ -1,6 +1,7 @@
 from communication.client.client import MountainClient
-from tests.main_animation_groups2 import main_graf
+from tests.main_animation import main_graf
 import time
+import ipywidgets
 import math
 
 class Climber:
@@ -107,25 +108,25 @@ climber_3 = Climber("lautaro martinez",((7*math.pi)/4),"navy")
 climber_4 = Climber("copetti",((math.pi)/4),"crimson")
 equipo = [climber_1,climber_2,climber_3,climber_4]
 nombres = [climber_1.name,climber_2.name,climber_3.name,climber_4.name]
-colores = {}
+color = {}
 for climber in equipo:
-    colores[climber.name] = climber.color
+    color[climber.name] = climber.color
 
 
 
 c = MountainClient()
 c.add_team(team1,nombres)
-
+team2 = "martin"
 c.finish_registration()
 
 print(c.get_data()[team1])
-
-while not c.is_over() or cima == True:
+cima = False
+while not c.is_over() and cima == False:
     for climber in equipo:
         cimas = c.get_data()[team1][climber.name]["cima"]
         if cimas == True:
             cima = True
     c.next_iteration(team1,{climber_1.name:climber_1.main_climb(),climber_2.name:climber_2.main_climb(),climber_3.name:climber_3.main_climb(),climber_4.name:climber_4.main_climb()})
     data = c.get_data()
-    main_graf(data,team1,colores)
+    main_graf(data,team1,color)
     time.sleep(0.1)

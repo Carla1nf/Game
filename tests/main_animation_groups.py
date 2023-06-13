@@ -6,9 +6,10 @@ import random
 
 reg = LinearRegression()
 
-x = []
-y = []
-z = []
+x = {}
+y = {}
+z = {}
+
 contador = 0
 
 
@@ -22,26 +23,30 @@ def grafico(data):
     ax.scatter(x_data,y_data,z_data)
     plt.show()
 
-def main_graf(data):
+def main_graf(data,team,colores):
+    global contador
+    contador += 1
+    plt.clf()
+    ax = plt.axes(projection="3d")
     for i in data:
-        plt.clf()
-        global contador
+        color = colores[i]
+        if contador <= 1:
+            x[i] = []
+            y[i] = []
+            z[i] = []
         x_values = []
         y_values = []
         z_values = []
-        contador += 1
-
-        ax = plt.axes(projection="3d")
+        x[i].append(data[i]["x"])
+        y[i].append(data[i]["y"])
+        z[i].append(data[i]["z"])
         x_values.append(data[i]["x"])
         y_values.append(data[i]["y"])
         z_values.append(data[i]["z"])
-        x.append(data[i]["x"])
-        y.append(data[i]["y"])
-        z.append(data[i]["z"])
-
-        if contador%2 == 0:
-            #ax.scatter(x_values,y_values,z_values, color="black")
-            ax.plot(x,y,z, color="black")
+        diccionario = {"x":x,"y":y,"z":z}
+        ax.scatter(x_values,y_values,z_values, color="black")
+        ax.plot(diccionario["x"][i],diccionario["y"][i],diccionario["z"][i],color,label=i)
+        plt.legend()
     plt.pause(0.001)
 
 def test():
