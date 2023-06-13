@@ -1,45 +1,46 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-
-# Fixing random state for reproducibility
-np.random.seed(19680801)
 
 
-def random_walk(num_steps, max_step=0.05):
-    """Return a 3D random walk as (num_steps, 3) array."""
-    start_pos = np.random.random(3)
-    steps = np.random.uniform(-max_step, max_step, size=(num_steps, 3))
-    walk = start_pos + np.cumsum(steps, axis=0)
-    return walk
-
-
-def update_lines(num, walks, lines):
-    for line, walk in zip(lines, walks):
-        # NOTE: there is no .set_data() for 3 dim data...
-        line.set_data(walk[:num, :2].T)
-        line.set_3d_properties(walk[:num, 2])
-    return lines
-
-
-# Data: 40 random walks as (num_steps, 3) arrays
-num_steps = 30
-walks = [random_walk(num_steps) for index in range(40)]
-
-# Attaching 3D axis to the figure
 fig = plt.figure()
-ax = fig.add_subplot(projection="3d")
+x = np.arange(10)
+y = 2.5 * np.sin(x / 20 * np.pi)
+yerr = np.linspace(0.05, 0.2, 10)
 
-# Create lines initially without data
-lines = [ax.plot([], [], [])[0] for _ in walks]
+plt.errorbar(x, y + 3, yerr=yerr, label='both limits (default)')
 
-# Setting the axes properties
-ax.set(xlim3d=(0, 1), xlabel='X')
-ax.set(ylim3d=(0, 1), ylabel='Y')
-ax.set(zlim3d=(0, 1), zlabel='Z')
+plt.errorbar(x, y + 2, yerr=yerr, uplims=True, label='uplims=True')
 
-# Creating the Animation object
-ani = animation.FuncAnimation(
-    fig, update_lines, num_steps, fargs=(walks, lines), interval=100)
+plt.errorbar(x, y + 1, yerr=yerr, uplims=True, lolims=True,
+             label='uplims=True, lolims=True')
 
+upperlimits = [True, False] * 5
+lowerlimits = [False, True] * 5
+plt.errorbar(x, y, yerr=yerr, uplims=upperlimits, lolims=lowerlimits,
+             label='subsets of uplims and lolims')
+
+plt.legend(loc='lower right')
+
+fig = plt.figure()
+x = np.arange(10) / 10
+y = (x + 0.1)**2
+
+plt.errorbar(x, y, xerr=0.1, xlolims=True, label='xlolims=True')
+y = (x + 0.1)**3
+
+plt.errorbar(x + 0.6, y, xerr=0.1, xuplims=upperlimits, xlolims=lowerlimits,
+             label='subsets of xuplims and xlolims')
+
+y = (x + 0.1)**4
+plt.errorbar(x + 1.2, y, xerr=0.1, xuplims=True, label='xuplims=True')
+
+plt.legend()
+plt.show()
+
+fig = plt.figure()
+x = np.arange(10) / 10
+y = (x + 0.1)**2
+y = (x + 0.1)**4
+plt.errorbar(x + 1.2, y, xerr=0.1, xuplims=True, label='xuplims=True')
+plt.legend()
 plt.show()

@@ -120,8 +120,12 @@ c.finish_registration()
 
 print(c.get_data()[team1])
 
-while not c.is_over():
+while not c.is_over() or cima == True:
+    for climber in equipo:
+        cimas = c.get_data()[team1][climber.name]["cima"]
+        if cimas == True:
+            cima = True
     c.next_iteration(team1,{climber_1.name:climber_1.main_climb(),climber_2.name:climber_2.main_climb(),climber_3.name:climber_3.main_climb(),climber_4.name:climber_4.main_climb()})
-    data = c.get_data()[team1]
-    main_graf(data,colores)
+    data = c.get_data()
+    main_graf(data,team1,colores)
     time.sleep(0.1)

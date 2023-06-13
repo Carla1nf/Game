@@ -19,7 +19,7 @@ def peligro(x,y) -> bool:
     if math.sqrt((x**2)+(y**2)) > 22900:
         return True
 
-def find_direction(diccionario,direction,contador,posible_cima,contador2) -> float:
+def find_direction(diccionario,direction,contador,posible_cima) -> float:
     """
     returns the next direction
     """

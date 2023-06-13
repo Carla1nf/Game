@@ -23,11 +23,12 @@ def grafico(data):
     ax.scatter(x_data,y_data,z_data)
     plt.show()
 
-def main_graf(data,colores):
+def main_graf(data,team,colores):
     global contador
     contador += 1
     plt.clf()
     ax = plt.axes(projection="3d")
+    data = data[team]
     for i in data:
         color = colores[i]
         if contador <= 1:
@@ -45,7 +46,8 @@ def main_graf(data,colores):
         z_values.append(data[i]["z"])
         diccionario = {"x":x,"y":y,"z":z}
         ax.scatter(x_values,y_values,z_values, color="black")
-        ax.plot(diccionario["x"][i],diccionario["y"][i],diccionario["z"][i],color)
+        ax.plot(diccionario["x"][i],diccionario["y"][i],diccionario["z"][i],color,label=i)
+        plt.legend()
     plt.pause(0.001)
 
 def test():
