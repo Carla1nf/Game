@@ -28,6 +28,7 @@ def main_graf(data,team,colores):
     contador += 1
     plt.clf()
     ax = plt.axes(projection="3d")
+    data = data[team]
     for i in data:
         color = colores[i]
         if contador <= 1:
