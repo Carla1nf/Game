@@ -1,22 +1,65 @@
-import pygame
+import tkinter as tk
+from mpl_toolkits import mplot3d
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-pygame.init()
+x = {}
+y = {}
+z = {}
+colores = {}
 
-# Dimensiones de la pantalla
-ancho_pantalla = 500
-alto_pantalla = 600
+contador = 0
 
-# Crear la pantalla del juego
-pantalla = pygame.display.set_mode((ancho_pantalla, alto_pantalla))
-pygame.display.set_caption("Dashboard")
+def main_grafico(dataT, team, colores):
+    def update_graph(frame):
+        nonlocal dataT, team, colores
+        ax1.cla()  # Limpiar el gráfico antes de dibujar el siguiente fotograma
+        ax2.cla()
 
-# Reloj para controlar la velocidad de actualización de la pantalla
-reloj = pygame.time.Clock()
+        global contador
+        contador += 1
+        dataT = dataT[team]
+        for i in dataT:
+            color = colores[i]
+            if contador <= 1:
+                x[i] = []
+                y[i] = []
+                z[i] = []
+            x[i].append(dataT[i]["x"])
+            y[i].append(dataT[i]["y"])
+            z[i].append(dataT[i]["z"])
+            ax1.scatter(x[i], y[i], z[i], color=color)
+            ax1.plot(x[i], y[i], z[i], color=color, label=i)
+            plt.legend()
 
-# Clase para manejar las piezas del Tetris
-class Pieza:
-    def __init__(self, forma, color):
-        self.forma = forma
-        self.color = color
-        self.x = ancho_pantalla // 2 - len(forma[0]) // 2
-        self.y = 0
+        # Actualizar los widgets de lienzo
+        canvas1.draw()
+        canvas2.draw()
+
+    # Crear la ventana
+    window = tk.Tk()
+    window.title("Gráficos 3D animados con Matplotlib")
+
+    # Crear figura y ejes 3D para el gráfico 3D 1
+    fig1 = plt.figure()
+    ax1 = plt.axes(projection='3d')
+
+    # Crear figura y ejes 3D para el gráfico 3D 2
+    fig2 = plt.figure()
+    ax2 = plt.axes(projection='3d')
+
+    # Crear los widgets de lienzo para los gráficos 3D
+    canvas1 = FigureCanvasTkAgg(fig1, master=window)
+    canvas2 = FigureCanvasTkAgg(fig2, master=window)
+
+    # Colocar los widgets de lienzo en la ventana
+    canvas1.get_tk_widget().pack(side=tk.LEFT)
+    canvas2.get_tk_widget().pack(side=tk.RIGHT)
+
+    # Crear animación para actualizar los gráficos
+    animation = FuncAnimation(fig1, update_graph, frames=np.arange(0, 100), interval=100)
+
+    # Iniciar el bucle de la ventana
+    window.mainloop()
