@@ -124,7 +124,7 @@ class Climber:
             datos.append(x)
             datos.append(y)
             datos.append(z)
-            print(f"{self.name} {self.contador}: {datos}")
+            print(f"{self.name} {self.contador}: x: {datos[0]:.02f}\t y: {datos[1]:.02f}\t z: {datos[2]:.02f}\t cima: {self.player_info['cima']}\n")
         if self.contador > 2 and math.sqrt((x**2)+(y**2)) > 22750:
                 self.algoritmo = 1
         if self.algoritmo == 3 and self.contador < 450:

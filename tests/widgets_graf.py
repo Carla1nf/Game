@@ -14,7 +14,6 @@ from communication.client.client import MountainClient
 import time
 
 def main():
-    print("hola")
     x = {}
     y = {}
     z = {}
@@ -45,6 +44,7 @@ def main():
     c.add_team(team1,nombres)
     team2 = "martin"
     c.finish_registration()
+    print(c.get_mountain())
 
     def main_graf(dataT,team1,colores,point_color):
             x_values = []
@@ -54,6 +54,7 @@ def main():
             ax1.cla()  # Limpiar el gráfico antes de dibujar el siguiente fotograma
             contador += 1
             dataT = dataT[team1]
+            print("\n")
             for i in dataT:
                 color = colores[i]
                 if contador <= 1:
@@ -84,8 +85,6 @@ def main():
                     x_2[i] = []
                     y_2[i] = []
                     z_2[i] = []
-                print(z_2)
-                print(contador2)
                 if contador2 > 3:
                     label3 = tk.Label(text=f"""Altura de cada escalador del equipo: 
                                       
@@ -112,25 +111,27 @@ def main():
                 ax3.plot(contadores,z_2[i],color=color, label=i)
         
     def update_graph(frame):
-        for climber in equipo:
-            cimas = c.get_data()[team1][climber.name]["cima"]
-            if cimas == True:
-                cima = True
-        direcciones = {climber_1.name:climber_1.main_climb(team1,c),climber_2.name:climber_2.main_climb(team1,c),climber_3.name:climber_3.main_climb(team1,c),climber_4.name:climber_4.main_climb(team1,c)}
-        c.next_iteration(team1,direcciones)
-        data = c.get_data()
-        data2 = c.get_data()[team1][climber_1.name]
-        main_graf(data,team1,color,climber.point_color)
-        graph_2d(data,team1,color,climber.point_color)
-        plt.legend()
-        time.sleep(0.1)
+        cima = False
+        if c.is_over() == False and c.is_registering_teams() == False and cima == False:
+            for climber in equipo:
+                cimas = c.get_data()[team1][climber.name]["cima"]
+                if cimas == True:
+                    cima = True
+            direcciones = {climber_1.name:climber_1.main_climb(team1,c),climber_2.name:climber_2.main_climb(team1,c),climber_3.name:climber_3.main_climb(team1,c),climber_4.name:climber_4.main_climb(team1,c)}
+            c.next_iteration(team1,direcciones)
+            data = c.get_data()
+            data2 = c.get_data()[team1][climber_1.name]
+            main_graf(data,team1,color,climber.point_color)
+            graph_2d(data,team1,color,climber.point_color)
+            plt.legend()
+            time.sleep(0.1)
 
 
         
 
         # Actualizar los widgets de lienzo
-        canvas1.draw()
-        canvas2.draw()
+            canvas1.draw()
+            canvas2.draw()
 
     # Crear la ventana
     window = tk.Tk()
