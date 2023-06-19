@@ -1,5 +1,5 @@
 from communication.client.client import MountainClient
-from tests.main_animation import main_graf
+from tests.pygme import main_grafico
 import time
 import ipywidgets
 import math
@@ -128,5 +128,5 @@ while not c.is_over() and cima == False:
             cima = True
     c.next_iteration(team1,{climber_1.name:climber_1.main_climb(),climber_2.name:climber_2.main_climb(),climber_3.name:climber_3.main_climb(),climber_4.name:climber_4.main_climb()})
     data = c.get_data()
-    main_graf(data,team1,color)
+    main_grafico(data,team1,color)
     time.sleep(0.1)
