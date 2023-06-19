@@ -54,9 +54,9 @@ class Climber:
         if contador2 < 20 and self.posible_cima == False:
             return self.posible_cima
         if contador > 10 and self.algoritmo == 1:
-            loop_cords = (self.diccionario[contador-3]["x"],self.diccionario[contador-3]["y"],self.diccionario[contador-3]["z"])
+            loop_cords = (self.diccionario[contador-7]["x"],self.diccionario[contador-7]["y"],self.diccionario[contador-7]["z"])
             actual_cords = (self.diccionario[contador]["x"],self.diccionario[contador]["y"],self.diccionario[contador]["z"])
-            if (abs(loop_cords[0] - actual_cords[0]) < 200) and (abs(loop_cords[1] - actual_cords[1]) < 200) and (abs(loop_cords[2] - actual_cords[2]) < 2):
+            if (abs(loop_cords[0] - actual_cords[0]) < 100) and (abs(loop_cords[1] - actual_cords[1]) < 100) and (abs(loop_cords[2] - actual_cords[2]) < 2):
                 self.posible_cima = False
                 contador2 = 0
                 return self.posible_cima
@@ -71,13 +71,6 @@ class Climber:
             print("cambio")
             self.posible_cima = True
         return self.posible_cima
-    
-    def find_color(self,cima_posible):
-        if cima_posible:
-            self.point_color = "black"
-            return self.point_color
-        self.point_color = "gree"
-        return self.point_color
     
     def find_direction(self,contador) -> float:
         """
@@ -117,21 +110,20 @@ class Climber:
         self.contador += 1
         self.player_info = c.get_data()[team1][self.name]
         self.diccionario[self.contador] = self.player_info
-        if self.contador > 2:
-            x = self.diccionario[self.contador]["x"]
-            y = self.diccionario[self.contador]["y"]
-            z = self.diccionario[self.contador]["z"]
-            datos.append(x)
-            datos.append(y)
-            datos.append(z)
-            print(f"{self.name} {self.contador}: x: {datos[0]:.02f}\t y: {datos[1]:.02f}\t z: {datos[2]:.02f}\t cima: {self.player_info['cima']}\n")
+        x = self.diccionario[self.contador]["x"]
+        y = self.diccionario[self.contador]["y"]
+        z = self.diccionario[self.contador]["z"]
+        datos.append(x)
+        datos.append(y)
+        datos.append(z)
+        print(f"{self.name} {self.contador}: x: {datos[0]:.02f}\t y: {datos[1]:.02f}\t z: {datos[2]:.02f}\t cima: {self.player_info['cima']}\n")
         if self.contador > 2 and math.sqrt((x**2)+(y**2)) > 22750:
                 self.algoritmo = 1
-        if self.algoritmo == 3 and self.contador < 450:
+        if ((self.algoritmo == 3 and self.contador < 450) or (self.algoritmo == 4 and self.contador < 150)) and ((math.sqrt((x**2)+(y**2)) < 22750)):
             self.player_info = c.get_data()[team1][self.name]
             self.diccionario[self.contador] = self.player_info
             return {"direction":self.direction, 'speed':self.speed}
-        if self.algoritmo == 3:
+        if self.algoritmo == 3 or self.algoritmo == 4:
             self.algoritmo = 1
         if self.posible_cima == False:
             self.contador2 += 1
@@ -139,7 +131,6 @@ class Climber:
         if self.posible_cima == True:
             self.contador2 = 0 
         self.direction = self.find_direction(self.contador)
-        self.point_color = self.find_color(self.posible_cima)
         self.speed = self.find_speed(self.contador)
         return {"direction":self.direction, 'speed':self.speed}
         
